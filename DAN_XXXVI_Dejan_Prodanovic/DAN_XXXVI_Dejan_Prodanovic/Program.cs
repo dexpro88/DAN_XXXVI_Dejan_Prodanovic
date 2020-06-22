@@ -10,6 +10,17 @@ namespace DAN_XXXVI_Dejan_Prodanovic
     {
         static void Main(string[] args)
         {
+            MyThreads mt = new MyThreads();
+            mt.InitializeMatrix();
+
+            for (int i = 0; i < 100; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                    Console.Write(mt.matrix[i,j]);
+                }
+                Console.WriteLine();
+            }
             Console.ReadLine();
         }
     }
