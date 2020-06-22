@@ -9,10 +9,25 @@ namespace DAN_XXXVI_Dejan_Prodanovic
     class MyThreads
     {
         public int[,] matrix;
+        public List<int> randomNumbers = new List<int>();
+        public int m, n;
+        Random rnd = new Random();
 
-        public void InitializeMatrix()
+        public void InitializeMatrix(int m, int n)
         {
-            matrix = new int[100, 100];
+            matrix = new int[m, n];
+            this.m = m;
+            this.n = n;
         }
+
+        public void GenerateRandomNumbers()
+        {
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                randomNumbers.Add(rnd.Next(10,100));
+            }
+        }
+
+       
     }
 }
