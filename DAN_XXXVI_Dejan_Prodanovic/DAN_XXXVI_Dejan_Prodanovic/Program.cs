@@ -14,20 +14,17 @@ namespace DAN_XXXVI_Dejan_Prodanovic
             mt.InitializeMatrix(20,20);
             mt.GenerateRandomNumbers();
 
-            foreach (var item in mt.randomNumbers)
-            {
-                Console.WriteLine(item);
-            }
+            
 
-            //mt.PopulateMatrix();
-            //for (int i = 0; i < mt.m; i++)
-            //{
-            //    for (int j = 0; j < mt.n; j++)
-            //    {
-            //        Console.Write(mt.matrix[i, j]+" ");
-            //    }
-            //    Console.WriteLine();
-            //}
+            mt.PopulateMatrix();
+            for (int i = 0; i < mt.m; i++)
+            {
+                for (int j = 0; j < mt.n; j++)
+                {
+                    Console.Write(mt.matrix[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
             Console.ReadLine();
         }
     }
