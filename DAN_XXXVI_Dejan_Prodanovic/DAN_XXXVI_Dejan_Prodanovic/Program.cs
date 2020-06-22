@@ -31,6 +31,7 @@ namespace DAN_XXXVI_Dejan_Prodanovic
                 }
                 Console.WriteLine();
             }
+            mt.WriteOddNumbersToFile();
             Console.ReadLine();
         }
     }

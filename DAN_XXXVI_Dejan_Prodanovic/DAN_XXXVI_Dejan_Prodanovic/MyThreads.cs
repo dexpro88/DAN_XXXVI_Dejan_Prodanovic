@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,6 +18,7 @@ namespace DAN_XXXVI_Dejan_Prodanovic
 
         public void InitializeMatrix(int m, int n)
         {
+            Thread.Sleep(1);
             lock (listLock)
             {
                 matrix = new int[m, n];
@@ -59,6 +61,34 @@ namespace DAN_XXXVI_Dejan_Prodanovic
                     matrix[i, j] = randomNumbers[counter++];
                 }
             }
+        }
+
+        public void WriteOddNumbersToFile()
+        {
+            int[] arr = new int[m*n];
+            int counter = 0;
+
+            if (File.Exists("../../OddNumbers.txt"))
+            {
+                System.IO.File.WriteAllText(@"../../OddNumbers.txt", string.Empty);
+            }
+
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (matrix[i, j] % 2 != 0)
+                    {
+                        arr[counter++] = (matrix[i, j]);
+                    }
+                }
+            }
+            StreamWriter sw = File.AppendText("../../OddNumbers.txt");
+            for (int i = 0; i < counter; i++)
+            {  
+               sw.WriteLine(arr[i]);               
+            }
+            sw.Close();
         }
     }
 }
