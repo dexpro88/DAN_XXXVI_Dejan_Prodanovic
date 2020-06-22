@@ -23,15 +23,15 @@ namespace DAN_XXXVI_Dejan_Prodanovic
             
             t1.Join();
             t2.Join();
-            for (int i = 0; i < mt.m; i++)
-            {
-                for (int j = 0; j < mt.n; j++)
-                {
-                    Console.Write(mt.matrix[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
-            mt.WriteOddNumbersToFile();
+           
+
+            Thread t3 = new Thread(mt.WriteOddNumbersToFile);
+            Thread t4 = new Thread(mt.ReadOddNumbersFromFile);
+
+            t3.Start();
+            t4.Start();
+            t3.Join();
+            t4.Join();
             Console.ReadLine();
         }
     }

@@ -15,15 +15,18 @@ namespace DAN_XXXVI_Dejan_Prodanovic
         public int m, n;
         Random rnd = new Random();
         readonly object listLock = new object();
+        int[] arr;
 
         public void InitializeMatrix(int m, int n)
         {
             Thread.Sleep(1);
+          
             lock (listLock)
             {
                 matrix = new int[m, n];
                 this.m = m;
                 this.n = n;
+                Console.WriteLine("Thread1 initilized matrix");
                 Monitor.Pulse(listLock);
                 
                 while (randomNumbers.Count < m * n)
@@ -31,6 +34,7 @@ namespace DAN_XXXVI_Dejan_Prodanovic
                     Monitor.Wait(listLock);
                 }
                 PopulateMatrix();
+                Console.WriteLine("Thread1 populated matrix with random numbers that Thread2 generated");
             }
            
         }
@@ -45,7 +49,7 @@ namespace DAN_XXXVI_Dejan_Prodanovic
                 {
                     randomNumbers.Add(rnd.Next(10, 100));
                 }
-                
+                Console.WriteLine("Thread2 generated 10000 random numbers");
                 Monitor.Pulse(listLock);
             }
               
@@ -65,14 +69,15 @@ namespace DAN_XXXVI_Dejan_Prodanovic
 
         public void WriteOddNumbersToFile()
         {
-            int[] arr = new int[m*n];
+           
             int counter = 0;
 
             if (File.Exists("../../OddNumbers.txt"))
             {
                 System.IO.File.WriteAllText(@"../../OddNumbers.txt", string.Empty);
             }
-
+            arr = new int[m * n];
+            
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < n; j++)
@@ -83,12 +88,48 @@ namespace DAN_XXXVI_Dejan_Prodanovic
                     }
                 }
             }
-            StreamWriter sw = File.AppendText("../../OddNumbers.txt");
-            for (int i = 0; i < counter; i++)
-            {  
-               sw.WriteLine(arr[i]);               
+            lock (listLock)
+            {
+                StreamWriter sw = File.AppendText("../../OddNumbers.txt");
+                for (int i = 0; i < counter; i++)
+                {
+                    sw.WriteLine(arr[i]);
+                }
+                sw.Close();
+                Monitor.Pulse(listLock);
             }
-            sw.Close();
+               
+            Console.WriteLine("Thread3 wrote odd numbers to file");
+        }
+        public void ReadOddNumbersFromFile()
+        {
+            try
+            {
+                lock (listLock)
+                {
+                    while(arr==null)
+                    {
+                        Monitor.Wait(listLock);
+                    }
+                        Console.WriteLine("Thread4 reads odd numbers from a file");
+                    using (StreamReader sr = new StreamReader("../../OddNumbers.txt"))
+                    {
+                        string line;
+
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            Console.WriteLine(line);
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception e)
+            {
+                
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
