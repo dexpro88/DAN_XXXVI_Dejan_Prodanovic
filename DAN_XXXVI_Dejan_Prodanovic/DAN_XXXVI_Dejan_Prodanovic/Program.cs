@@ -12,10 +12,9 @@ namespace DAN_XXXVI_Dejan_Prodanovic
         static void Main(string[] args)
         {
             MyThreads mt = new MyThreads();
-            //mt.InitializeMatrix(20,20);
-            //mt.GenerateRandomNumbers();
+           
 
-            Thread t1 = new Thread(()=>mt.InitializeMatrix(20,20));
+            Thread t1 = new Thread(()=>mt.InitializeMatrix(100,100));
             Thread t2 = new Thread(mt.GenerateRandomNumbers);
 
             t2.Start();
@@ -27,9 +26,9 @@ namespace DAN_XXXVI_Dejan_Prodanovic
 
             Thread t3 = new Thread(mt.WriteOddNumbersToFile);
             Thread t4 = new Thread(mt.ReadOddNumbersFromFile);
-
-            t3.Start();
             t4.Start();
+            t3.Start();
+          
             t3.Join();
             t4.Join();
             Console.ReadLine();
