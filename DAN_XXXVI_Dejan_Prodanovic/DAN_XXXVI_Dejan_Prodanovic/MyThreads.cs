@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DAN_XXXVI_Dejan_Prodanovic
@@ -12,20 +13,40 @@ namespace DAN_XXXVI_Dejan_Prodanovic
         public List<int> randomNumbers = new List<int>();
         public int m, n;
         Random rnd = new Random();
+        readonly object listLock = new object();
 
         public void InitializeMatrix(int m, int n)
         {
-            matrix = new int[m, n];
-            this.m = m;
-            this.n = n;
+            lock (listLock)
+            {
+                matrix = new int[m, n];
+                this.m = m;
+                this.n = n;
+                Monitor.Pulse(listLock);
+                
+                while (randomNumbers.Count < m * n)
+                {
+                    Monitor.Wait(listLock);
+                }
+                PopulateMatrix();
+            }
+           
         }
 
         public void GenerateRandomNumbers()
         {
-            for (int i = 0; i < matrix.Length; i++)
+            lock (listLock)
             {
-                randomNumbers.Add(rnd.Next(10,100));
+              
+                Monitor.Wait(listLock, Timeout.Infinite);
+                for (int i = 0; i < matrix.Length; i++)
+                {
+                    randomNumbers.Add(rnd.Next(10, 100));
+                }
+                
+                Monitor.Pulse(listLock);
             }
+              
         }
 
         public void PopulateMatrix()
